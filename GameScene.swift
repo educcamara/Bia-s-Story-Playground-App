@@ -11,7 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let bia = PlayerNode(name: "bia")
-    let leftButton = SKSpriteNode(color: .init(red: 0.5, green: 0.6, blue: 0.6, alpha: 0.8), size: .init(width: 120, height: 120))
+    let leftButton = SKSpriteNode(color: .init(red: 0.5, green: 0.6, blue: 0.6, alpha: 0.8), size: .init(width: 100, height: 100))
     
     var isWalking: Bool = false
     
@@ -57,10 +57,10 @@ class GameScene: SKScene {
         background.position = .init(x: 429, y: 0)
         background.zPosition = 0
         
-        bia.position = .init(x: 0, y: -80)
+        bia.position = .init(x: -200, y: -80)
         bia.zPosition = 4
         
-        leftButton.position = .init(x: -330, y: -110)
+        leftButton.position = .init(x: -340, y: -120)
     }
 }
 

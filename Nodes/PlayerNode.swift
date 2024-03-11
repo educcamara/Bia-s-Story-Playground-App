@@ -15,16 +15,18 @@ enum AnimStates {
 
 class PlayerNode: SKNode {
     var sprite: SKSpriteNode
+    var direction: Directions
     
     init(name: String) {
         print("init started \(name)_idle_1")
         sprite = .init(imageNamed: "\(name)_idle_1")
         sprite.name = name
+        self.direction = .foward
         super.init()
         self.name = name
         
         let idleAnimation = getIdleAnimation(prefix: name)
-
+        
         // Idle Animation
         sprite.run(.repeatForever(idleAnimation))
         sprite.scale(to: .init(width: 140, height: 140))
@@ -69,10 +71,6 @@ class PlayerNode: SKNode {
         return walkingAnimation
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     public func changeAnim(_ value: AnimStates) {
         sprite.removeAllActions()
         
@@ -84,5 +82,25 @@ class PlayerNode: SKNode {
             let walkingAnimation = getWalkingAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(walkingAnimation))
         }
+    }
+    
+    public func setDirection(direction: Directions) {
+        switch direction {
+        case .foward:
+            if self.direction == .backward {
+                self.sprite.size.width *= 1
+                self.direction = .foward
+            }
+        case .backward:
+            if self.direction == .foward {
+                self.sprite.size.width *= 1
+                self.direction = .backward
+            }
+        }
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
