@@ -15,16 +15,6 @@ struct ContentView: View {
     var body: some View {
         SpriteView(scene: scene)
             .ignoresSafeArea()
-//            .onAppear {
-//                let currentOrientation = UIDevice.current.orientation
-//                if currentOrientation == .landscapeLeft
-//                    || currentOrientation == .landscapeRight {
-//                    UIDevice.current.setValue(currentOrientation.rawValue, forKey: "orientation")
-//                } else {
-//                    UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
-//                }
-//                    UINavigationController.attemptRotationToDeviceOrientation()
-//            }
     }
     
 }

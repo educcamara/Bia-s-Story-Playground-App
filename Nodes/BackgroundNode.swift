@@ -10,7 +10,6 @@ import SpriteKit
 
 class BackgroundNode: SKNode {
     let sprite: SKSpriteNode
-//    let spriteForeground: SKSpriteNode
     
     init(name: String) {
         print("init started \(name)")
@@ -22,22 +21,20 @@ class BackgroundNode: SKNode {
         sprite.size.height = UIScreen.main.bounds.height
         sprite.size.width = sprite.size.width * ratio
         
-//        spriteForeground = .init(
-//            color: .blue,
-//            size: .init(width: sprite.size.width, height: sprite.size.height))
-//        spriteForeground.alpha = 0
-//        spriteForeground.blendMode = .multiply
-//        spriteForeground.zPosition = 5
-        
         super.init()
         
         addChild(sprite)
-//        addChild(spriteForeground)
     }
     
-//    public func fadeIn(duration: TimeInterval) {
-//        spriteForeground.run(.fadeIn(withDuration: duration))
-//    }
+    public func move(to direction: Directions) {
+        self.removeAllActions()
+        let velocity: CGFloat = direction == .backward ? 2 : -2
+        self.run(.repeatForever(.move(by: .init(dx: velocity, dy: 0), duration: 0.01)))
+    }
+    
+    public func stopMoving() {
+        self.removeAllActions()
+    }
     
     
     required init?(coder aDecoder: NSCoder) {

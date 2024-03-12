@@ -41,16 +41,14 @@ class GameScene: SKScene {
                 leftButton.toggleTouchState()
                 bia.changeAnim(to: .walking, direction: .backward)
                 
-                background.removeAllActions()
-                background.run(.repeatForever(.move(by: .init(dx: 2, dy: 0), duration: 0.01)))
+                background.move(to: .backward)
             } else if rightButton.contains(location) {
                 print("Trying to walk fowards")
                 rightButton.isBeingTouched = true
                 rightButton.toggleTouchState()
                 bia.changeAnim(to: .walking, direction: .foward)
                 
-                background.removeAllActions()
-                background.run(.repeatForever(.move(by: .init(dx: -2, dy: 0), duration: 0.01)))
+                background.move(to: .foward)
             }
         }
         
@@ -71,9 +69,8 @@ class GameScene: SKScene {
             isWalking.toggle()
             print("Trying to stop walking")
             bia.changeAnim(to: .idle, direction: bia.direction)
-            background.removeAllActions()
             
-            //background.fadeIn(duration: 2)
+            background.stopMoving()
         }
     }
 
@@ -81,14 +78,10 @@ class GameScene: SKScene {
         if background.position.x < -429 || background.position.x > 429 {
             isWalking = false
             
-            background.removeAllActions()
+            background.stopMoving()
             bia.changeAnim(to: .idle, direction: bia.direction)
             
-            if background.position.x < 0 {
-                background.position.x += 1
-            } else {
-                background.position.x -= 1
-            }
+            background.position.x += background.position.x < 0 ? 1 : -1
         }
     }
     
