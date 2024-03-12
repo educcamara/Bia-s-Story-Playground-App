@@ -11,8 +11,8 @@ import GameplayKit
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let bia = PlayerNode(name: "bia")
-    let leftButton = ButtonNode(name: "leftButton")
-    let rightButton = ButtonNode(name: "rightButton")
+    let leftButton = ButtonNode(name: "left_button")
+    let rightButton = ButtonNode(name: "right_button")
     
     var isWalking: Bool = false
     
@@ -33,36 +33,63 @@ class GameScene: SKScene {
         let touch = touches.first!
         let location = touch.location(in: self)
         
-        if leftButton.contains(location) {
+        if !isWalking {
             isWalking.toggle()
-            if isWalking {
+            if leftButton.contains(location) {
                 print("Trying to walk backwards")
+                leftButton.isBeingTouched = true
+                leftButton.toggleTouchState()
                 bia.changeAnim(to: .walking, direction: .backward)
-            } else {
-                print("Trying to stop walking backwards")
-                bia.changeAnim(to: .idle, direction: .backward)
-            }
-        } else if rightButton.contains(location) {
-            isWalking.toggle()
-            if isWalking {
+                
+                background.removeAllActions()
+                background.run(.repeatForever(.move(by: .init(dx: 2, dy: 0), duration: 0.01)))
+            } else if rightButton.contains(location) {
                 print("Trying to walk fowards")
+                rightButton.isBeingTouched = true
+                rightButton.toggleTouchState()
                 bia.changeAnim(to: .walking, direction: .foward)
-            } else {
-                print("Trying to stop walking fowards")
-                bia.changeAnim(to: .idle, direction: .foward)
+                
+                background.removeAllActions()
+                background.run(.repeatForever(.move(by: .init(dx: -2, dy: 0), duration: 0.01)))
             }
         }
         
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if touches.isEmpty { return }
         
-//        for touch in touches {
-//            let location = touch.location(in: self)
-//            
-//            background.position.x = location.x
-//        }
-         
+        if leftButton.isBeingTouched {
+            leftButton.isBeingTouched = false
+            leftButton.toggleTouchState()
+        } else if rightButton.isBeingTouched {
+            rightButton.isBeingTouched = false
+            rightButton.toggleTouchState()
+        }
+        
+        if isWalking {
+            isWalking.toggle()
+            print("Trying to stop walking")
+            bia.changeAnim(to: .idle, direction: bia.direction)
+            background.removeAllActions()
+            
+            //background.fadeIn(duration: 2)
+        }
+    }
+
+    override func update(_ currentTime: TimeInterval) {
+        if background.position.x < -429 || background.position.x > 429 {
+            isWalking = false
+            
+            background.removeAllActions()
+            bia.changeAnim(to: .idle, direction: bia.direction)
+            
+            if background.position.x < 0 {
+                background.position.x += 1
+            } else {
+                background.position.x -= 1
+            }
+        }
     }
     
     private func init_nodes() {
@@ -73,7 +100,7 @@ class GameScene: SKScene {
         bia.zPosition = 4
         
         leftButton.position = .init(x: -340, y: -120)
-        rightButton.position = .init(x: -220, y: -120)
+        rightButton.position = .init(x: 340, y: -120)
     }
 }
 

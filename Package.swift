@@ -17,6 +17,7 @@ let package = Package(
             name: "Bias Story",
             targets: ["AppModule"],
             bundleIdentifier: "eduardo.Bias-Story",
+            teamIdentifier: "JV6QJM67FK",
             displayVersion: "1.0",
             bundleVersion: "1",
             appIcon: .placeholder(icon: .gamepad),
@@ -26,10 +27,10 @@ let package = Package(
                 .phone
             ],
             supportedInterfaceOrientations: [
-                .portrait,
+                //.portrait,
                 .landscapeRight,
                 .landscapeLeft,
-                .portraitUpsideDown(.when(deviceFamilies: [.pad]))
+                //.portraitUpsideDown(.when(deviceFamilies: [.pad]))
             ]
         )
     ],
