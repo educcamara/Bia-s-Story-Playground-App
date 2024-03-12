@@ -11,7 +11,8 @@ import GameplayKit
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let bia = PlayerNode(name: "bia")
-    let leftButton = SKSpriteNode(color: .init(red: 0.5, green: 0.6, blue: 0.6, alpha: 0.8), size: .init(width: 100, height: 100))
+    let leftButton = ButtonNode(name: "leftButton")
+    let rightButton = ButtonNode(name: "rightButton")
     
     var isWalking: Bool = false
     
@@ -19,9 +20,11 @@ class GameScene: SKScene {
         print("Scene did load")
         print(UIScreen.main.bounds)
         init_nodes()
+        
         addChild(background)
         addChild(bia)
         addChild(leftButton)
+        addChild(rightButton)
     }
     
     
@@ -33,11 +36,20 @@ class GameScene: SKScene {
         if leftButton.contains(location) {
             isWalking.toggle()
             if isWalking {
-                print("Trying to walk")
-                bia.changeAnim(.walk)
+                print("Trying to walk backwards")
+                bia.changeAnim(to: .walking, direction: .backward)
             } else {
-                print("Trying to stop walking")
-                bia.changeAnim(.idle)
+                print("Trying to stop walking backwards")
+                bia.changeAnim(to: .idle, direction: .backward)
+            }
+        } else if rightButton.contains(location) {
+            isWalking.toggle()
+            if isWalking {
+                print("Trying to walk fowards")
+                bia.changeAnim(to: .walking, direction: .foward)
+            } else {
+                print("Trying to stop walking fowards")
+                bia.changeAnim(to: .idle, direction: .foward)
             }
         }
         
@@ -45,11 +57,11 @@ class GameScene: SKScene {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        for touch in touches {
-            let location = touch.location(in: self)
-            
-            background.position.x = location.x
-        }
+//        for touch in touches {
+//            let location = touch.location(in: self)
+//            
+//            background.position.x = location.x
+//        }
          
     }
     
@@ -57,10 +69,11 @@ class GameScene: SKScene {
         background.position = .init(x: 429, y: 0)
         background.zPosition = 0
         
-        bia.position = .init(x: -200, y: -80)
+        bia.position = .init(x: -160, y: -80)
         bia.zPosition = 4
         
         leftButton.position = .init(x: -340, y: -120)
+        rightButton.position = .init(x: -220, y: -120)
     }
 }
 

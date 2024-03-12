@@ -10,7 +10,11 @@ import SpriteKit
 import GameplayKit
 
 enum AnimStates {
-    case idle, walk
+    case idle, walking
+}
+
+enum Directions {
+    case foward, backward
 }
 
 class PlayerNode: SKNode {
@@ -29,7 +33,7 @@ class PlayerNode: SKNode {
         
         // Idle Animation
         sprite.run(.repeatForever(idleAnimation))
-        sprite.scale(to: .init(width: 140, height: 140))
+        sprite.scale(to: .init(width: 150, height: 150))
         addChild(sprite)
         
         //sprite.size.width *= -1
@@ -71,14 +75,15 @@ class PlayerNode: SKNode {
         return walkingAnimation
     }
     
-    public func changeAnim(_ value: AnimStates) {
+    public func changeAnim(to value: AnimStates, direction: Directions) {
         sprite.removeAllActions()
+        setDirection(direction: direction)
         
         switch value {
         case .idle:
             let idleAnimation = getIdleAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(idleAnimation))
-        case .walk:
+        case .walking:
             let walkingAnimation = getWalkingAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(walkingAnimation))
         }
@@ -88,12 +93,12 @@ class PlayerNode: SKNode {
         switch direction {
         case .foward:
             if self.direction == .backward {
-                self.sprite.size.width *= 1
+                self.sprite.size.width *= -1
                 self.direction = .foward
             }
         case .backward:
             if self.direction == .foward {
-                self.sprite.size.width *= 1
+                self.sprite.size.width *= -1
                 self.direction = .backward
             }
         }
