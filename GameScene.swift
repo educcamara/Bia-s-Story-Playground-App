@@ -10,6 +10,7 @@ import GameplayKit
 
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
+    let backgroundSky = BackgroundNode(name: "backgroundSky")
     let bia = PlayerNode(name: "bia")
     let leftButton = ButtonNode(name: "left_button")
     let rightButton = ButtonNode(name: "right_button")
@@ -20,6 +21,7 @@ class GameScene: SKScene {
         init_nodes()
         
         addChild(background)
+        addChild(backgroundSky)
         addChild(bia)
         addChild(leftButton)
         addChild(rightButton)
@@ -30,7 +32,15 @@ class GameScene: SKScene {
             background.stopMoving()
             bia.changeAnim(to: .idle, direction: bia.direction)
             
+            if background.position.x < 0 {
+                background.reachedRightLimit = true
+            }
+            
             background.position.x += background.position.x < 0 ? 1 : -1
+        }
+        if background.position.x > -390 && background.reachedRightLimit {
+            background.changeToSunsetBackground()
+            backgroundSky.changeToSunsetBackground()
         }
     }
     
@@ -38,11 +48,16 @@ class GameScene: SKScene {
         background.position = .init(x: 429, y: 0)
         background.zPosition = 0
         
+        backgroundSky.position = .zero
+        backgroundSky.zPosition = -1
+        
         bia.position = .init(x: -160, y: -80)
         bia.zPosition = 4
         
         leftButton.position = .init(x: -340, y: -120)
+        leftButton.zPosition = 10
         rightButton.position = .init(x: 340, y: -120)
+        rightButton.zPosition = 10
         
         leftButton.setStartTouchAction {
             self.bia.changeAnim(to: .walking, direction: .backward)

@@ -9,21 +9,32 @@ import Foundation
 import SpriteKit
 
 class BackgroundNode: SKNode {
-    let sprite: SKSpriteNode
+    let spriteDay: SKSpriteNode
+    let spriteSunset: SKSpriteNode
+    
+    var reachedRightLimit: Bool = false
     
     init(name: String) {
         print("init started \(name)")
-        sprite = .init(imageNamed: "\(name)_1")
-        sprite.name = name
+        spriteDay = .init(imageNamed: "\(name)_day")
+        spriteDay.name = "\(name)_day"
+        spriteDay.zPosition = 0
         
+        spriteSunset = .init(imageNamed: "\(name)_sunset")
+        spriteSunset.name = "\(name)_sunset"
+        spriteSunset.alpha = 0
+        spriteSunset.zPosition = 0.1
         
-        let ratio = UIScreen.main.bounds.height/sprite.size.height
-        sprite.size.height = UIScreen.main.bounds.height
-        sprite.size.width = sprite.size.width * ratio
+        let ratio = UIScreen.main.bounds.height/spriteDay.size.height
+        spriteDay.size.height = UIScreen.main.bounds.height
+        spriteDay.size.width *= ratio
+        spriteSunset.size.height = UIScreen.main.bounds.height
+        spriteSunset.size.width *= ratio
         
         super.init()
         
-        addChild(sprite)
+        addChild(spriteDay)
+        addChild(spriteSunset)
     }
     
     public func move(to direction: Directions) {
@@ -36,8 +47,12 @@ class BackgroundNode: SKNode {
         self.removeAllActions()
     }
     
+    public func changeToSunsetBackground() {
+        spriteSunset.run(.fadeIn(withDuration: 4))
+    }
+    
     
     required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented")
     }
 }
