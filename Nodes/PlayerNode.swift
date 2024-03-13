@@ -21,22 +21,23 @@ class PlayerNode: SKNode {
     var sprite: SKSpriteNode
     var direction: Directions
     
+    var isWalking: Bool
+    
     init(name: String) {
         print("init started \(name)_idle_1")
         sprite = .init(imageNamed: "\(name)_idle_1")
         sprite.name = name
         self.direction = .foward
+        isWalking = false
+        
         super.init()
         self.name = name
         
         let idleAnimation = getIdleAnimation(prefix: name)
         
-        // Idle Animation
-        sprite.run(.repeatForever(idleAnimation))
         sprite.scale(to: .init(width: 150, height: 150))
+        sprite.run(.repeatForever(idleAnimation))
         addChild(sprite)
-        
-        //sprite.size.width *= -1
     }
     
     private func getIdleAnimation(prefix: String) -> SKAction {
@@ -44,18 +45,12 @@ class PlayerNode: SKNode {
         
         for index in 1...5 {
             let textureName = "\(prefix)_idle_\(index)"
-            //print("\(textureName)")
             let texture = SKTexture(imageNamed: textureName)
             
             playerTextures.append(texture)
-            
             // Append texture again based on certain conditions
-            if index < 5 {
-                playerTextures.append(texture)
-            }
-            if index == 2 {
-                playerTextures.append(texture)
-            }
+            if index < 5 {playerTextures.append(texture)}
+            if index == 2 {playerTextures.append(texture)}
         }
         let idleAnimation = SKAction.animate(with: playerTextures, timePerFrame: 0.07)
         return idleAnimation
@@ -81,15 +76,19 @@ class PlayerNode: SKNode {
         
         switch value {
         case .idle:
+            isWalking = false
+            
             let idleAnimation = getIdleAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(idleAnimation))
         case .walking:
+            isWalking = true
+            
             let walkingAnimation = getWalkingAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(walkingAnimation))
         }
     }
     
-    public func setDirection(direction: Directions) {
+    private func setDirection(direction: Directions) {
         switch direction {
         case .foward:
             if self.direction == .backward {
