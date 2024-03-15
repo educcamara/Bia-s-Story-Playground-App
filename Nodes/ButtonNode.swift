@@ -11,10 +11,8 @@ import SpriteKit
 class ButtonNode: SKNode {
     public let sprite: SKSpriteNode
     
-    public var isBeingTouched: Bool
-    
-    private var startTouchAction: (() -> Void)?
-    private var endTouchAction: (() -> Void)?
+    var startTouchAction: (() -> Void)?
+    var endTouchAction: (() -> Void)?
     
     var scaleInAnimation: SKAction {
     get {.group([
@@ -34,7 +32,6 @@ class ButtonNode: SKNode {
         sprite = .init(imageNamed: "\(name)")
         sprite.scale(to: .init(width: 100, height: 100))
         sprite.alpha = 0.6
-        isBeingTouched = false
         
         super.init()
         self.name = name
@@ -58,6 +55,19 @@ class ButtonNode: SKNode {
     
     public func setEndTouchAction(action: @escaping () -> Void) {
         endTouchAction = action
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class PressButtonNode: ButtonNode {
+    public var isBeingTouched: Bool
+    
+    override init(name: String) {
+        isBeingTouched = false
+        super.init(name: name)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -84,23 +94,12 @@ class ButtonNode: SKNode {
 class ToggleButtonNode: ButtonNode {
     public var didTouch: Bool
     
-    private var startTouchAction: (() -> Void)?
-    private var endTouchAction: (() -> Void)?
-    
     override init(name: String) {
         didTouch = false
         super.init(name: name)
     }
     
-    override func setStartTouchAction(action: @escaping () -> Void) {
-        startTouchAction = action
-    }
-    override func setEndTouchAction(action: @escaping () -> Void) {
-        endTouchAction = action
-    }
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isBeingTouched = true
         didTouch.toggle()
         
         if didTouch {
@@ -110,10 +109,6 @@ class ToggleButtonNode: ButtonNode {
             sprite.run(super.scaleInAnimation)
             self.endTouchAction?()
         }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        isBeingTouched = false
     }
     
     required init?(coder aDecoder: NSCoder) {

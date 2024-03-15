@@ -12,8 +12,8 @@ class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let backgroundSky = BackgroundNode(name: "backgroundSky")
     let bia = PlayerNode(name: "bia")
-    let leftButton = ButtonNode(name: "left_button")
-    let rightButton = ButtonNode(name: "right_button")
+    let leftButton = PressButtonNode(name: "left_button")
+    let rightButton = PressButtonNode(name: "right_button")
     let playButton = ToggleButtonNode(name: "right_button") // #TEMPORARY
     
     override func sceneDidLoad() {
@@ -36,6 +36,7 @@ class GameScene: SKScene {
             
             if background.position.x < 0 {
                 background.reachedRightLimit = true
+                playButton.toggleUserInteraction(to: true)
             }
             
             background.position.x += background.position.x < 0 ? 1 : -1
@@ -43,6 +44,7 @@ class GameScene: SKScene {
         if background.position.x > -390 && background.reachedRightLimit {
             background.changeToSunsetBackground()
             backgroundSky.changeToSunsetBackground()
+            playButton.toggleUserInteraction(to: false)
         }
     }
     
@@ -81,6 +83,7 @@ class GameScene: SKScene {
             self.background.stopMoving()
         }
         
+        playButton.toggleUserInteraction(to: false)
         playButton.setStartTouchAction {
             self.bia.togglePlayingAnim(to: true)
             self.leftButton.toggleUserInteraction(to: false)
