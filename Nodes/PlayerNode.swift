@@ -22,6 +22,7 @@ class PlayerNode: SKNode {
     var direction: Directions
     
     var isWalking: Bool
+    var isPlaying: Bool
     
     init(name: String) {
         print("init started \(name)_idle_1")
@@ -29,6 +30,7 @@ class PlayerNode: SKNode {
         sprite.name = name
         self.direction = .foward
         isWalking = false
+        isPlaying = false
         
         super.init()
         self.name = name
@@ -43,14 +45,14 @@ class PlayerNode: SKNode {
     private func getIdleAnimation(prefix: String) -> SKAction {
         var playerTextures: [SKTexture] = []
         
-        for index in 1...5 {
+        for index in 1...6 {
             let textureName = "\(prefix)_idle_\(index)"
             let texture = SKTexture(imageNamed: textureName)
             
             playerTextures.append(texture)
             // Append texture again based on certain conditions
-            if index < 5 {playerTextures.append(texture)}
-            if index == 2 {playerTextures.append(texture)}
+            if index < 6 && index > 1 {playerTextures.append(texture)}
+            if index == 3 {playerTextures.append(texture)}
         }
         let idleAnimation = SKAction.animate(with: playerTextures, timePerFrame: 0.07)
         return idleAnimation
@@ -70,6 +72,20 @@ class PlayerNode: SKNode {
         return walkingAnimation
     }
     
+    private func getPlayingAnimation(prefix: String) -> SKAction {
+        var playerTextures: [SKTexture] = []
+        
+        for index in 1...13 {
+            let textureName = "\(prefix)_playing_\(index)"
+            
+            let texture = SKTexture(imageNamed: textureName)
+            playerTextures.append(texture)
+        }
+        let playingAnimation = SKAction.animate(with: playerTextures, timePerFrame: 1/9)
+        
+        return playingAnimation
+    }
+    
     public func changeAnim(to value: AnimStates, direction: Directions) {
         sprite.removeAllActions()
         setDirection(direction: direction)
@@ -85,6 +101,17 @@ class PlayerNode: SKNode {
             
             let walkingAnimation = getWalkingAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(walkingAnimation))
+        }
+    }
+    
+    public func togglePlayingAnim(to value: Bool? = nil) {
+        isPlaying = value ?? !isPlaying
+        if isPlaying {
+            sprite.removeAllActions()
+            sprite.run(.repeatForever(getPlayingAnimation(prefix: self.name!)))
+        } else {
+            sprite.removeAllActions()
+            sprite.run(.repeatForever(getIdleAnimation(prefix: self.name!)))
         }
     }
     

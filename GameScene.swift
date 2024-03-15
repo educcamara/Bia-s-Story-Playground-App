@@ -14,6 +14,7 @@ class GameScene: SKScene {
     let bia = PlayerNode(name: "bia")
     let leftButton = ButtonNode(name: "left_button")
     let rightButton = ButtonNode(name: "right_button")
+    let playButton = ButtonNode(name: "right_button") // #TEMPORARY
     
     override func sceneDidLoad() {
         print("Scene did load")
@@ -58,6 +59,9 @@ class GameScene: SKScene {
         leftButton.zPosition = 10
         rightButton.position = .init(x: 340, y: -120)
         rightButton.zPosition = 10
+        
+        playButton.position = .init(x: -340, y: 120)
+        playButton.zPosition = 10
         
         leftButton.setStartTouchAction {
             self.bia.changeAnim(to: .walking, direction: .backward)

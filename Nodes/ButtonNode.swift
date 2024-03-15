@@ -10,6 +10,7 @@ import SpriteKit
 
 class ButtonNode: SKNode {
     let sprite: SKSpriteNode
+    
     var isBeingTouched: Bool
     
     var startTouchAction: (() -> Void)?
@@ -26,6 +27,15 @@ class ButtonNode: SKNode {
         isUserInteractionEnabled = true
         
         self.addChild(sprite)
+    }
+    
+    public func toggleUserInteraction(to value: Bool? = nil) {
+        isUserInteractionEnabled = value ?? !isUserInteractionEnabled
+        if isUserInteractionEnabled {
+            sprite.alpha = 0.6
+        } else {
+            sprite.alpha = 0.3
+        }
     }
     
     public func setStartTouchAction(action: @escaping () -> Void) {
