@@ -9,12 +9,26 @@ import Foundation
 import SpriteKit
 
 class ButtonNode: SKNode {
-    let sprite: SKSpriteNode
+    public let sprite: SKSpriteNode
     
-    var isBeingTouched: Bool
+    public var isBeingTouched: Bool
     
-    var startTouchAction: (() -> Void)?
-    var endTouchAction: (() -> Void)?
+    private var startTouchAction: (() -> Void)?
+    private var endTouchAction: (() -> Void)?
+    
+    var scaleInAnimation: SKAction {
+    get {.group([
+            .scale(to: .init(width: 100, height: 100), duration: 0.05),
+            .fadeAlpha(to: 0.6, duration: 0.05)
+    ])}
+}
+    var scaleOutAnimation: SKAction {
+    get {.group([
+            .scale(by: 1.1, duration: 0.05),
+            .fadeAlpha(to: 0.8, duration: 0.05)
+        ])
+    }
+}
     
     init(name: String) {
         sprite = .init(imageNamed: "\(name)")
@@ -49,25 +63,58 @@ class ButtonNode: SKNode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         isBeingTouched = true
         
-        let scaleOut:SKAction = .group([
-            .scale(by: 1.1, duration: 0.05),
-            .fadeAlpha(to: 0.8, duration: 0.05)
-        ])
-        sprite.run(scaleOut)
+        sprite.run(scaleOutAnimation)
         self.startTouchAction?()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         isBeingTouched = false
         
-        let scaleIn: SKAction = .group([
-            .scale(to: .init(width: 100, height: 100), duration: 0.05),
-            .fadeAlpha(to: 0.6, duration: 0.05)
-        ])
-        sprite.run(scaleIn)
+        sprite.run(scaleInAnimation)
         self.endTouchAction?()
     }
     
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+class ToggleButtonNode: ButtonNode {
+    public var didTouch: Bool
+    
+    private var startTouchAction: (() -> Void)?
+    private var endTouchAction: (() -> Void)?
+    
+    override init(name: String) {
+        didTouch = false
+        super.init(name: name)
+    }
+    
+    override func setStartTouchAction(action: @escaping () -> Void) {
+        startTouchAction = action
+    }
+    override func setEndTouchAction(action: @escaping () -> Void) {
+        endTouchAction = action
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isBeingTouched = true
+        didTouch.toggle()
+        
+        if didTouch {
+            sprite.run(super.scaleOutAnimation)
+            self.startTouchAction?()
+        } else {
+            sprite.run(super.scaleInAnimation)
+            self.endTouchAction?()
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isBeingTouched = false
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

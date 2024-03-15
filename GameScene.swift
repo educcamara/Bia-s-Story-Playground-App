@@ -14,7 +14,7 @@ class GameScene: SKScene {
     let bia = PlayerNode(name: "bia")
     let leftButton = ButtonNode(name: "left_button")
     let rightButton = ButtonNode(name: "right_button")
-    let playButton = ButtonNode(name: "right_button") // #TEMPORARY
+    let playButton = ToggleButtonNode(name: "right_button") // #TEMPORARY
     
     override func sceneDidLoad() {
         print("Scene did load")
@@ -26,6 +26,7 @@ class GameScene: SKScene {
         addChild(bia)
         addChild(leftButton)
         addChild(rightButton)
+        addChild(playButton)
     }
 
     override func update(_ currentTime: TimeInterval) {
@@ -78,6 +79,17 @@ class GameScene: SKScene {
         rightButton.setEndTouchAction {
             self.bia.changeAnim(to: .idle, direction: .foward)
             self.background.stopMoving()
+        }
+        
+        playButton.setStartTouchAction {
+            self.bia.togglePlayingAnim(to: true)
+            self.leftButton.toggleUserInteraction(to: false)
+            self.rightButton.toggleUserInteraction(to: false)
+        }
+        playButton.setEndTouchAction {
+            self.bia.togglePlayingAnim(to: false)
+            self.leftButton.toggleUserInteraction(to: true)
+            self.rightButton.toggleUserInteraction(to: true)
         }
     }
 }
