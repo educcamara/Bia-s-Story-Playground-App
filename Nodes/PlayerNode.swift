@@ -17,8 +17,11 @@ enum Directions {
     case foward, backward
 }
 
+/// Classe que representa o nó de um jogador no jogo.
 class PlayerNode: SKNode {
+    /// Sprite que representa o personagem do jogador. É a ele que atribuímos um  asset, configurações como escala, animação, assim por diante.
     var sprite: SKSpriteNode
+    /// A direção atual para onde  o jogador está voltado.
     var direction: Directions
     
     var isWalking: Bool
