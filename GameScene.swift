@@ -8,17 +8,16 @@
 import SpriteKit
 import GameplayKit
 
+// MARK: - Cena Principal
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let backgroundSky = BackgroundNode(name: "backgroundSky")
     let bia = PlayerNode(name: "bia")
     let leftButton = PressButtonNode(name: "left_button")
     let rightButton = PressButtonNode(name: "right_button")
-    let playButton = ToggleButtonNode(name: "right_button") // #TEMPORARY
+    let playButton = ToggleButtonNode(name: "play_button")
     
     override func sceneDidLoad() {
-        print("Scene did load")
-        print(UIScreen.main.bounds)
         init_nodes()
         
         addChild(background)
@@ -85,15 +84,14 @@ class GameScene: SKScene {
         
         playButton.toggleUserInteraction(to: false)
         playButton.setStartTouchAction {
-            self.bia.togglePlayingAnim(to: true)
+            self.bia.changeAnim(to: .playing)
             self.leftButton.toggleUserInteraction(to: false)
             self.rightButton.toggleUserInteraction(to: false)
         }
         playButton.setEndTouchAction {
-            self.bia.togglePlayingAnim(to: false)
+            self.bia.changeAnim(to: .idle)
             self.leftButton.toggleUserInteraction(to: true)
             self.rightButton.toggleUserInteraction(to: true)
         }
     }
 }
-

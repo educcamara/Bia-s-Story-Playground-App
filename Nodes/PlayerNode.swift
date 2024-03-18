@@ -10,7 +10,7 @@ import SpriteKit
 import GameplayKit
 
 enum AnimStates {
-    case idle, walking
+    case idle, walking, playing
 }
 
 enum Directions {
@@ -23,17 +23,16 @@ class PlayerNode: SKNode {
     var sprite: SKSpriteNode
     /// A direção atual para onde  o jogador está voltado.
     var direction: Directions
+    /// A animação atual em que nosso Player está.
+    var currentAnimState: AnimStates
     
-    var isWalking: Bool
-    var isPlaying: Bool
-    
+    /// Init de uma classe/struct é muito importante para configurar certos dados dentro dela. É ela que é chamada assim que atribuímos uma variável ou constante à classe.
+    /// - Parameter name: Ele recebe o nome do prefixo de seus assets, por exemplo "bia\_idle\_1", "bia\_idle\_2", "bia\_walking\_1"... então o `name` será "bia".
     init(name: String) {
-        print("init started \(name)_idle_1")
         sprite = .init(imageNamed: "\(name)_idle_1")
         sprite.name = name
-        self.direction = .foward
-        isWalking = false
-        isPlaying = false
+        direction = .foward
+        currentAnimState = .playing
         
         super.init()
         self.name = name
@@ -89,32 +88,28 @@ class PlayerNode: SKNode {
         return playingAnimation
     }
     
-    public func changeAnim(to value: AnimStates, direction: Directions) {
+    public func changeAnim(to value: AnimStates, direction: Directions? = nil) {
         sprite.removeAllActions()
-        setDirection(direction: direction)
+        if direction != nil {
+            setDirection(direction: direction!)
+        }
         
         switch value {
         case .idle:
-            isWalking = false
+            currentAnimState = .idle
             
             let idleAnimation = getIdleAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(idleAnimation))
         case .walking:
-            isWalking = true
+            currentAnimState = .walking
             
             let walkingAnimation = getWalkingAnimation(prefix: self.name!)
             self.sprite.run(.repeatForever(walkingAnimation))
-        }
-    }
-    
-    public func togglePlayingAnim(to value: Bool? = nil) {
-        isPlaying = value ?? !isPlaying
-        if isPlaying {
-            sprite.removeAllActions()
-            sprite.run(.repeatForever(getPlayingAnimation(prefix: self.name!)))
-        } else {
-            sprite.removeAllActions()
-            sprite.run(.repeatForever(getIdleAnimation(prefix: self.name!)))
+        case .playing:
+            currentAnimState = .playing
+            
+            let playingAnimation = getPlayingAnimation(prefix: self.name!)
+            self.sprite.run(.repeatForever(playingAnimation))
         }
     }
     

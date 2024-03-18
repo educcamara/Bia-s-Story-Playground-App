@@ -15,7 +15,6 @@ class BackgroundNode: SKNode {
     var reachedRightLimit: Bool = false
     
     init(name: String) {
-        print("init started \(name)")
         spriteDay = .init(imageNamed: "\(name)_day")
         spriteDay.name = "\(name)_day"
         spriteDay.zPosition = 0
@@ -48,7 +47,7 @@ class BackgroundNode: SKNode {
     }
     
     public func changeToSunsetBackground() {
-        spriteSunset.run(.fadeIn(withDuration: 4))
+        spriteSunset.run(.fadeIn(withDuration: 3))
     }
     
     
