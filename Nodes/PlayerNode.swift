@@ -22,6 +22,9 @@ class PlayerNode: SKNode {
     /// Sprite que representa o personagem do jogador. É a ele que atribuímos um  asset, configurações como escala, animação, assim por diante.
     var sprite: SKSpriteNode
     /// A direção atual para onde  o jogador está voltado.
+    var cropNode: SKCropNode
+    
+    
     var direction: Directions
     /// A animação atual em que nosso Player está.
     var currentAnimState: AnimStates
@@ -31,6 +34,9 @@ class PlayerNode: SKNode {
     init(name: String) {
         sprite = .init(imageNamed: "\(name)_idle_1")
         sprite.name = name
+        
+        cropNode = .init()
+        
         direction = .foward
         currentAnimState = .playing
         
@@ -39,9 +45,15 @@ class PlayerNode: SKNode {
         
         let idleAnimation = getIdleAnimation(prefix: name)
         
+        
         sprite.scale(to: .init(width: 150, height: 150))
         sprite.run(.repeatForever(idleAnimation))
-        addChild(sprite)
+        
+        cropNode.maskNode = sprite
+        cropNode.run(.repeatForever(idleAnimation))
+        
+        cropNode.addChild(sprite)
+        addChild(cropNode)
     }
     
     private func getIdleAnimation(prefix: String) -> SKAction {
@@ -56,7 +68,8 @@ class PlayerNode: SKNode {
             if index < 6 && index > 1 {playerTextures.append(texture)}
             if index == 3 {playerTextures.append(texture)}
         }
-        let idleAnimation = SKAction.animate(with: playerTextures, timePerFrame: 0.07)
+        let randomTimePerFrame: CGFloat = .random(in: (0.06)...(0.08))
+        let idleAnimation = SKAction.animate(with: playerTextures, timePerFrame: randomTimePerFrame)
         return idleAnimation
     }
     
@@ -69,7 +82,8 @@ class PlayerNode: SKNode {
             let texture = SKTexture(imageNamed: textureName)
             playerTextures.append(texture)
         }
-        let walkingAnimation = SKAction.animate(with: playerTextures, timePerFrame: 1/12)
+        let randomTimePerFrame: CGFloat = .random(in: (0.07)...(0.09))
+        let walkingAnimation = SKAction.animate(with: playerTextures, timePerFrame: randomTimePerFrame)
         
         return walkingAnimation
     }
@@ -83,7 +97,8 @@ class PlayerNode: SKNode {
             let texture = SKTexture(imageNamed: textureName)
             playerTextures.append(texture)
         }
-        let playingAnimation = SKAction.animate(with: playerTextures, timePerFrame: 1/9)
+        let randomTimePerFrame: CGFloat = .random(in: (0.10)...(0.12))
+        let playingAnimation = SKAction.animate(with: playerTextures, timePerFrame: randomTimePerFrame)
         
         return playingAnimation
     }

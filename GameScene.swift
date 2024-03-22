@@ -13,6 +13,7 @@ class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let backgroundSky = BackgroundNode(name: "backgroundSky")
     let bia = PlayerNode(name: "bia")
+    let rafa = PlayerNode(name: "rafa")
     let leftButton = PressButtonNode(name: "left_button")
     let rightButton = PressButtonNode(name: "right_button")
     let playButton = ToggleButtonNode(name: "play_button")
@@ -23,6 +24,7 @@ class GameScene: SKScene {
         addChild(background)
         addChild(backgroundSky)
         addChild(bia)
+        addChild(rafa)
         addChild(leftButton)
         addChild(rightButton)
         addChild(playButton)
@@ -32,6 +34,7 @@ class GameScene: SKScene {
         if background.position.x < -429 || background.position.x > 429 {
             background.stopMoving()
             bia.changeAnim(to: .idle, direction: bia.direction)
+            rafa.changeAnim(to: .idle, direction: bia.direction)
             
             if background.position.x < 0 {
                 background.reachedRightLimit = true
@@ -54,8 +57,11 @@ class GameScene: SKScene {
         backgroundSky.position = .zero
         backgroundSky.zPosition = -1
         
-        bia.position = .init(x: -160, y: -80)
+        bia.position = .init(x: -150, y: -80)
         bia.zPosition = 4
+        
+        rafa.position = .init(x: bia.position.x - 65, y: bia.position.y + 15)
+        rafa.zPosition = bia.zPosition - 0.1
         
         leftButton.position = .init(x: -340, y: -120)
         leftButton.zPosition = 10
@@ -67,29 +73,35 @@ class GameScene: SKScene {
         
         leftButton.setStartTouchAction {
             self.bia.changeAnim(to: .walking, direction: .backward)
+            self.rafa.changeAnim(to: .walking, direction: .backward)
             self.background.move(to: .backward)
         }
         leftButton.setEndTouchAction {
             self.bia.changeAnim(to: .idle, direction: .backward)
+            self.rafa.changeAnim(to: .idle, direction: .backward)
             self.background.stopMoving()
         }
         rightButton.setStartTouchAction {
             self.bia.changeAnim(to: .walking, direction: .foward)
+            self.rafa.changeAnim(to: .walking, direction: .foward)
             self.background.move(to: .foward)
         }
         rightButton.setEndTouchAction {
             self.bia.changeAnim(to: .idle, direction: .foward)
+            self.rafa.changeAnim(to: .idle, direction: .foward)
             self.background.stopMoving()
         }
         
         playButton.toggleUserInteraction(to: false)
         playButton.setStartTouchAction {
             self.bia.changeAnim(to: .playing)
+            self.rafa.changeAnim(to: .playing)
             self.leftButton.toggleUserInteraction(to: false)
             self.rightButton.toggleUserInteraction(to: false)
         }
         playButton.setEndTouchAction {
             self.bia.changeAnim(to: .idle)
+            self.rafa.changeAnim(to: .idle)
             self.leftButton.toggleUserInteraction(to: true)
             self.rightButton.toggleUserInteraction(to: true)
         }
