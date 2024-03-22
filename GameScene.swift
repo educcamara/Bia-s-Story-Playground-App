@@ -12,8 +12,11 @@ import GameplayKit
 class GameScene: SKScene {
     let background = BackgroundNode(name: "background")
     let backgroundSky = BackgroundNode(name: "backgroundSky")
+
     let bia = PlayerNode(name: "bia")
     let rafa = PlayerNode(name: "rafa")
+    let eliane = PlayerNode(name: "eliane")
+    
     let leftButton = PressButtonNode(name: "left_button")
     let rightButton = PressButtonNode(name: "right_button")
     let playButton = ToggleButtonNode(name: "play_button")
@@ -23,8 +26,10 @@ class GameScene: SKScene {
         
         addChild(background)
         addChild(backgroundSky)
+        
         addChild(bia)
         addChild(rafa)
+        
         addChild(leftButton)
         addChild(rightButton)
         addChild(playButton)
