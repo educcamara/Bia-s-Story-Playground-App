@@ -29,6 +29,8 @@ class PlayerNode: SKNode {
     /// A animação atual em que nosso Player está.
     var currentAnimState: AnimStates
     
+    private var isMovingBy: Bool = false
+    
     /// Init de uma classe/struct é muito importante para configurar certos dados dentro dela. É ela que é chamada assim que atribuímos uma variável ou constante à classe.
     /// - Parameter name: Ele recebe o nome do prefixo de seus assets, por exemplo "bia\_idle\_1", "bia\_idle\_2", "bia\_walking\_1"... então o `name` será "bia".
     init(name: String) {
@@ -104,6 +106,7 @@ class PlayerNode: SKNode {
     }
     
     public func changeAnim(to value: AnimStates, direction: Directions? = nil) {
+        if isMovingBy {return}
         sprite.removeAllActions()
         if direction != nil {
             setDirection(direction: direction!)
@@ -128,7 +131,26 @@ class PlayerNode: SKNode {
         }
     }
     
-    private func setDirection(direction: Directions) {
+    public func moveBy(vector: CGVector) {
+        let direction: Directions = vector.dx > 0 ? .foward : .backward
+        let duration: CGFloat = abs(vector.dx)/2 * 0.015
+        
+        changeAnim(to: .walking, direction: direction)
+        
+        isMovingBy = true
+        self.run(.group([
+            .move(by: vector, duration: duration),
+            .sequence([
+                .wait(forDuration: duration + 0.01),
+                .run {
+                    self.isMovingBy.toggle()
+                    self.changeAnim(to: .idle)
+                }
+            ])
+        ]))
+    }
+    
+    public func setDirection(direction: Directions) {
         switch direction {
         case .foward:
             if self.direction == .backward {
