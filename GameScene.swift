@@ -44,7 +44,7 @@ class GameScene: SKScene {
         addChild(playButton)
         
         for player in playerNodes {
-            player.moveBy(vector: .init(dx: 335, dy: 0))
+            player.moveBy(vector: .init(dx: 355, dy: 0))
         }
     }
 
@@ -66,7 +66,7 @@ class GameScene: SKScene {
                 }
             }
         }
-        if background.position.x > -390 && background.reachedRightLimit {
+        if background.position.x > -400 && background.reachedRightLimit {
             background.changeToSunsetBackground()
             backgroundSky.changeToSunsetBackground()
             playButton.toggleUserInteraction(to: false)
@@ -92,7 +92,7 @@ class GameScene: SKScene {
         playerNodes[2].zPosition = playerNodes[0].zPosition - 0.1
         
         
-        npcNodes[0].position = .init(x: 470, y: -70)
+        npcNodes[0].position = .init(x: 490, y: -70)
         npcNodes[0].zPosition = 4
         
         npcNodes[1].position = .init(x: npcNodes[0].position.x + 75, y: npcNodes[0].position.y - 15)
@@ -148,10 +148,17 @@ class GameScene: SKScene {
                     .wait(forDuration: 1),
                     .run {
                         for npc in self.npcNodes {
-                            npc.moveBy(vector: .init(dx: 335, dy: 0))
+                            npc.moveBy(vector: .init(dx: 355, dy: 0))
                         }
+                        self.leftButton.toggleUserInteraction(to: true)
+                        self.rightButton.toggleUserInteraction(to: true)
+                        self.alreadyPlayed = true
                     }
                 ]))
+            } else {
+                self.leftButton.toggleUserInteraction(to: true)
+                self.rightButton.toggleUserInteraction(to: true)
+                self.alreadyPlayed = true
             }
             for player in self.playerNodes {
                 player.changeAnim(to: .idle)
@@ -160,9 +167,7 @@ class GameScene: SKScene {
                 npc.changeAnim(to: .idle)
             }
             
-            self.leftButton.toggleUserInteraction(to: true)
-            self.rightButton.toggleUserInteraction(to: true)
-            self.alreadyPlayed = true
+
         }
     }
 }
